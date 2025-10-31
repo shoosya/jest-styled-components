@@ -2,13 +2,19 @@ const css = require('@adobe/css-tools');
 const { getCSS, getHashes } = require('./utils');
 
 let cache = new WeakSet();
+
 const getNodes = (node, nodes = []) => {
-  if (typeof node === 'object') {
-    nodes.push(node);
+  if (!node || typeof node !== 'object') {
+    return nodes;
   }
 
-  if (node.children) {
-    Array.from(node.children).forEach((child) => getNodes(child, nodes));
+  nodes.push(node);
+
+  if (node.children && typeof node.children === 'object') {
+    try {
+      Array.from(node.children).forEach((child) => getNodes(child, nodes));
+    } catch (_) {
+    }
   }
 
   return nodes;
